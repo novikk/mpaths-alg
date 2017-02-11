@@ -49,7 +49,12 @@ func distanceInMeters(pt1, pt2 models.Point) float64 {
 }
 
 func Kmeans(pts models.Points, k int) models.Clusters {
-	centroids := RandomPoints(boundaries(pts), k)
+	//centroids := RandomPoints(boundaries(pts), k)
+	centroids := make(models.Points, k)
+	for i := 0; i < k; i++ {
+		centroids[i] = pts[rand.Intn(len(pts))]
+	}
+
 	var finalClusters models.Clusters
 
 	repeated := 0
