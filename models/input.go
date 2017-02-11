@@ -11,3 +11,4 @@ type Cluster struct {
 	Radius   float64
 }
 type Clusters []Cluster
+type Routes []Points
