@@ -11,7 +11,7 @@ import (
 	"github.com/novikk/mpaths-alg/models"
 )
 
-func GetRoutes(pts models.Points) models.Routes {
+func GetRoutesAndClusters(pts models.Points) (models.Routes, models.Clusters) {
 	clusters := KmeansMaxDist(pts, 200)
 	for _, c := range clusters {
 		fmt.Println(c.Centroid, "-->", c.Pts, "(", c.Radius, ")")
@@ -46,7 +46,7 @@ func GetRoutes(pts models.Points) models.Routes {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(string(output[:]), err)
-		return nil
+		return nil, nil
 	}
 
 	numVehicles := 0
@@ -72,5 +72,5 @@ func GetRoutes(pts models.Points) models.Routes {
 		}
 	}
 
-	return routes
+	return routes, clusters
 }

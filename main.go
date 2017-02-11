@@ -16,6 +16,6 @@ func main() {
 		models.Point{41.538419, 2.451129},
 	}, 100)
 
-	routes := algorithm.GetRoutes(pts)
+	routes, _ := algorithm.GetRoutesAndClusters(pts)
 	fmt.Println(routes)
 }
