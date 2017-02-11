@@ -18,6 +18,6 @@ func main() {
 
 	clusters := algorithm.KmeansMaxDist(pts, 200)
 	for _, c := range clusters {
-		fmt.Println(c.Centroid, "-->", c.Pts)
+		fmt.Println(c.Centroid, "-->", c.Pts, "(", c.Radius, ")")
 	}
 }
