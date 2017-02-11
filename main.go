@@ -16,7 +16,7 @@ func main() {
 		models.Point{41.538419, 2.451129},
 	}, 100)
 
-	clusters := algorithm.Kmeans(pts, 10)
+	clusters := algorithm.KmeansMaxDist(pts, 200)
 	for _, c := range clusters {
 		fmt.Println(c.Centroid, "-->", c.Pts)
 	}

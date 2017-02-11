@@ -1,6 +1,7 @@
 package algorithm
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 
@@ -38,6 +39,13 @@ func RandomPoints(bounds [2]models.Point, k int) models.Points {
 
 func distance(pt1, pt2 models.Point) float64 {
 	return math.Sqrt(math.Pow(pt1.Lat-pt2.Lat, 2) + math.Pow(pt1.Lng-pt2.Lng, 2))
+}
+
+func distanceInMeters(pt1, pt2 models.Point) float64 {
+	// haversine formula
+	p := math.Pi / 180
+	a := 0.5 - math.Cos((pt2.Lat-pt1.Lat)*p)/2 + math.Cos(pt1.Lat*p)*math.Cos(pt2.Lat*p)*(1-math.Cos((pt2.Lng-pt1.Lng)*p))/2
+	return 12742 * math.Asin(math.Sqrt(a)) * 1000
 }
 
 func Kmeans(pts models.Points, k int) models.Clusters {
@@ -81,7 +89,7 @@ func Kmeans(pts models.Points, k int) models.Clusters {
 			}
 
 			newCentroids[i] = models.Point{totalLat / float64(len(clusters[i].Pts)), totalLng / float64(len(clusters[i].Pts))}
-			if newCentroids[i].Lat != centroids[i].Lat || newCentroids[i].Lng != centroids[i].Lng {
+			if math.Abs(newCentroids[i].Lat-centroids[i].Lat) > 0.00001 || math.Abs(newCentroids[i].Lng-centroids[i].Lng) > 0.00001 {
 				changed = true
 			}
 		}
@@ -95,4 +103,30 @@ func Kmeans(pts models.Points, k int) models.Clusters {
 	}
 
 	return finalClusters
+}
+
+func KmeansMaxDist(pts models.Points, maxDistMeters float64) models.Clusters {
+	// start with k=1 cluster until max dist is satisfied
+	k := 1
+
+	for true {
+		fmt.Println("Trying k =", k)
+		clusters := Kmeans(pts, k)
+
+		currentMaxDist := 0.0
+		for _, clust := range clusters {
+			for _, pt := range clust.Pts {
+				currentMaxDist = math.Max(currentMaxDist, distanceInMeters(pt, clust.Centroid))
+			}
+		}
+
+		if currentMaxDist <= maxDistMeters {
+			fmt.Println(currentMaxDist)
+			return clusters
+		}
+
+		k = k + 1
+	}
+
+	return nil
 }
