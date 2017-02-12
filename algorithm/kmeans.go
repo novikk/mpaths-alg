@@ -115,24 +115,26 @@ func KmeansMaxDist(pts models.Points, maxDistMeters float64) models.Clusters {
 	k := 1
 
 	for true {
-		fmt.Println("Trying k =", k)
-		clusters := Kmeans(pts, k)
+		for i := 0; i < 4; i++ {
+			fmt.Println("Trying k =", k)
+			clusters := Kmeans(pts, k)
 
-		currentMaxDist := 0.0
-		for cId := range clusters {
-			clustMaxDist := 0.0
-			for _, pt := range clusters[cId].Pts {
-				dist := distanceInMeters(pt, clusters[cId].Centroid)
-				currentMaxDist = math.Max(currentMaxDist, dist)
-				clustMaxDist = math.Max(clustMaxDist, dist)
+			currentMaxDist := 0.0
+			for cId := range clusters {
+				clustMaxDist := 0.0
+				for _, pt := range clusters[cId].Pts {
+					dist := distanceInMeters(pt, clusters[cId].Centroid)
+					currentMaxDist = math.Max(currentMaxDist, dist)
+					clustMaxDist = math.Max(clustMaxDist, dist)
+				}
+
+				clusters[cId].Radius = clustMaxDist
 			}
 
-			clusters[cId].Radius = clustMaxDist
-		}
-
-		if currentMaxDist <= maxDistMeters {
-			fmt.Println(currentMaxDist)
-			return clusters
+			if currentMaxDist <= maxDistMeters {
+				fmt.Println(currentMaxDist)
+				return clusters
+			}
 		}
 
 		k = k + 1
