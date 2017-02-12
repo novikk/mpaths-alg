@@ -28,7 +28,7 @@ func GetRoutesAndClusters(pts models.Points) (models.Routes, models.Clusters) {
 		lngStr := strconv.FormatFloat(clusters[i].Centroid.Lng, 'f', -1, 64)
 
 		fmt.Println(latStr == "NaN", lngStr == "NaN", len(clusters[i].Pts) == 0, clusters[i].Radius == 0)
-		if latStr == "NaN" || lngStr == "NaN" || len(clusters[i].Pts) == 0 || clusters[i].Radius == 0 {
+		if latStr == "NaN" || lngStr == "NaN" || len(clusters[i].Pts) == 0 {
 			continue
 		}
 
